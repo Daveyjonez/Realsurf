@@ -7,5 +7,18 @@ http://magicseaweed.com/
 
 http://solspot.com/
 
-The intended UI is modern and minimal which will allow users to see only the data they came to the site for. This layout is also optimal for translating to a mobile platform in the future as I build this project out more. 
+#L A N G U A G E S
+
+The wave height data is pulled from the surf report websites via python scraper I wrote with the help of the Beautiful Soup library.
+The html of REALSURF will pull variables from this python script in order to update at regular intervals. I intend to host on Heroku and hopefully allow my friends and I to use this site as our go to surf report!
+
+#A L G O R I T H M
+
+The algorithm will be a simple weighted average of the low and high end wave heights with different weights applied to different sites depending upon their past accuracy in reporting wave heights. Ideally, as time goes on, I will add a validation system for these weights which would consist of me rating how accurate each site was after I went surfing. Therfore, weighting can be dynamic and constantly updating, allowing for the most accurate report on REALSURF.
+
+#D E S I G N
+
+The intended UI is modern and minimal which will allow users to see only the data they came to REALSURF for. This layout is also optimal for translating to a mobile platform in the future as I build this project out more. 
+
+
 
