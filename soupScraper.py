@@ -6,9 +6,9 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 
-SUNSET_CLIFFS_INDEX = 0
-SCRIPPS_INDEX = 1
-BLACKS_INDEX = 2
+NUM_SITES = 2
+
+reportsFinal = []
 
 ###################### SURFLINE URL STRINGS AND TAG ###########################
 
@@ -42,6 +42,22 @@ msUrls = [msSunsetCliffs, msScrippsUrl, msBlacksUrl]
 
 ###############################################################################
 
+'''
+This class represents a surf break. It contains all wave, wind, & tide data 
+associated with that break relevant to the website
+'''
+class surfBreak:
+	def __init__(self, name,low, high, wind, tide):
+		self.name = name
+		self.low = low
+		self.high = high
+		self.wind = wind
+		self.tide = tide 	
+	
+	#toString method	
+	def __str__(self):
+		return '{0}: Wave height: {1}-{2} Wind: {3} Tide: {4}'.format(self.name, 
+			self.low, self.high, self.wind, self.tide)
 
 '''
 This returns the proper attribute from the surf report sites
@@ -95,7 +111,7 @@ tag:	 the html tag where the actual report lives on the page
 
 returns: a list of strings of each breaks surf report
 '''
-def extract_Reports(rootUrl, urlList, tag, tagText):
+def extractReports(rootUrl, urlList, tag, tagText):
 	#empty list to hold reports
 	reports = []
 	reportNums = []
@@ -126,12 +142,34 @@ def extract_Reports(rootUrl, urlList, tag, tagText):
 	return reportNums
 #END METHOD
 
-slReports = extract_Reports(slRootUrl, slUrls, slTag, slTagText)
-msReports = extract_Reports(msRootUrl, msUrls, msTag, msTagText)
+'''
+This method calculates the average of the wave heights
+'''
+def calcAverages(reportList):
+	#empty list to hold averages
+	finalAverages = []
+	listIndex = 0
+	waveIndex = 0
 
-def getAverage(waveHeightList):
-	for num in waveHeightList:
-		
+	#loop thru list of reports to calc each breaks ave low and high
+	for x in range(0, 6):
+			#get low ave
+			average = (reportList[listIndex][waveIndex] 
+				+ reportList[listIndex+1][waveIndex]) / NUM_SITES
+			
+			finalAverages.append(average)
+			
+			waveIndex += 1
 
+	return finalAverages
+#END METHOD
 
+slReports = extractReports(slRootUrl, slUrls, slTag, slTagText)
+msReports = extractReports(msRootUrl, msUrls, msTag, msTagText)
 
+reportsFinal.append(slReports)
+reportsFinal.append(msReports)
+
+print 'Surfline:     ', slReports
+print 'Magicseaweed: ', msReports
+print 'Averages:     ', calcAverages(reportsFinal)
