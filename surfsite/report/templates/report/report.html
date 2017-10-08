@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" 
+    href="{% static 'report/css/style.css' %}"/>
+
+    <link href="https://fonts.googleapis.com/css?family=Biryani:300,400,800" 
+    rel="stylesheet"/>
+  
+  <head>
+      <title>REALSURF</title>
+  </head>
+   
+   <body>
+      
+      <h1>
+        <form id="search">
+          <input id="search" type="text">
+        </form>
+      </h1>
+
+    <div class="container">
+      <div class="column">
+        <div class="text">Wind</div>
+        <div class="number">{{beach.wind}}</div>
+      </div>            
+      <div class="column">
+        <div class="text">Wave Height</div>
+        <div class="number">{{beach.low}}-{{beach.high}}</div>
+      </div>    
+      <div class="column">
+        <div class="text">Tide</div>
+        <div class="number">{{beach.tide}}</div>
+      </div>    
+    </div>
+
+    <h2>
+      REALSURF
+    </h2>
+
+    <h3>
+      A simple site by David Owens
+    </h3>
+  
+   </body>
+</html>
+

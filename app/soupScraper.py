@@ -1,14 +1,13 @@
 #Author: David Owens
 #File name: soupScraper.py
-#Description: html scraper that takes surf reports from various websites
+#Description: html scraper that takes surf reports from various websites. This
+#			  data includes wave height, tide, and wind.
 
 import csv
 import requests
 from bs4 import BeautifulSoup
 
 NUM_SITES = 2
-
-reportsFinal = []
 
 ####################### SURFLINE URL STRINGS AND TAG ###########################
 
@@ -61,11 +60,18 @@ class surfBreak:
 #END CLASS
 
 '''
-This returns the proper attribute from the surf report sites
+This returns the proper attribute for wave height from the surf report sites
 '''
-def reportTagFilter(tag):
+def waveTagFilter(tag):
     return (tag.has_attr('class') and 'rating-text' in tag['class']) \
     	or (tag.has_attr('id') and tag['id'] == 'observed-wave-range')
+#END METHOD
+
+'''
+This returns the proper attribute for wind from the surf report sites
+'''
+def windTagFilter(tag):
+    return (tag.has_attr('id') and tag['id'] == 'curr-wind-div')
 #END METHOD
 
 '''
@@ -119,25 +125,21 @@ def extractReports(rootUrl, urlList, tag, tagText):
 	reports = []
 	reportNums = []
 	index = 0
-
 	#loop thru URLs
 	for url in urlList:
 		try:
 			index += 1
 			#request page
 			request = requests.get(rootUrl + url)
-
 			#turn into soup
 			soup = BeautifulSoup(request.content, 'lxml')
-
 			#get the tag where surf report lives
-			reportTag = soup.findAll(reportTagFilter)[0]
-
+			reportTag = soup.findAll(waveTagFilter)[0]
+			#Add string values to
 			reports.append(reportTag.text.strip())
-
 		#notify if fail
 		except:
-			print ('scrape failure at URL {}'.format(index))
+			print ('wave failure at URL: {}'.format(url))
 			pass
 
 	reportNums = extractInts(reports)
@@ -146,8 +148,48 @@ def extractReports(rootUrl, urlList, tag, tagText):
 #END METHOD
 
 '''
-This method calculates the average of the wave heights
+This method iterates through a list of urls and extracts the wind from
+the webpage dependent upon its tag location
+
+rootUrl: The root url of each surf website
+urlList: A list of specific urls to be appended to the root url for each
+		 break
+
+tag:	 the html tag where the actual report lives on the page
+
+returns: a list of strings of each breaks measured wind
 '''
+def extractWind(rootUrl, urlList, tag, tagText):
+	#empty list to hold reports
+	winds = []
+	windNums = []
+	index = 0
+
+	#loop thru URLs
+	for url in urlList:
+		try:
+			index += 1
+			#request page
+			request = requests.get(rootUrl + url)
+			print (request)
+			#turn into soup
+			soup = BeautifulSoup(request.content, 'lxml')
+			#get the tag where wind value lives
+			windTag = soup.findAll(windTagFilter)[0]
+			#Add string values to
+			winds.append(windTag.text.strip())
+		#notify if fail
+		except:
+			print ('wind failure at URL: {}'.format(url))
+			pass
+
+	windNums = extractInts(winds)
+
+	return windNums
+#END METHOD
+
+'''
+This method calculates the average of the wave heights
 '''
 def calcAverages(reportList):
 	#empty list to hold averages
@@ -167,12 +209,12 @@ def calcAverages(reportList):
 
 	return finalAverages
 #END METHOD
-'''
+
+
 slReports = extractReports(slRootUrl, slUrls, slTag, slTagText)
 msReports = extractReports(msRootUrl, msUrls, msTag, msTagText)
+slWinds = extractWind(slRootUrl, slUrls, slTag, 'curr-wind-div')
 
-reportsFinal.append(slReports)
-reportsFinal.append(msReports)
-
+print (slWinds)
 print ('Surfline:     {}'.format(slReports))
 print ('Magicseaweed: {}'.format(msReports))

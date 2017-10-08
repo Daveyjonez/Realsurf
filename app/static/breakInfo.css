@@ -1,0 +1,110 @@
+body, html{
+    padding:0;
+    margin:0;
+}
+
+h1{
+    font-family: 'Biryani', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: #4C4C4D;
+}
+
+h2{
+    font-family: 'Biryani', sans-serif;
+    font-size: 14px;
+    font-weight: lighter;
+    text-align: center;
+    color: #c6c6c6;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Biryani', sans-serif;
+    font-size: 20px;
+    font-weight: lighter;
+    color: #4C4C4D;
+    width: 100%;
+    border-bottom: 1px solid #4C4C4D;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    padding: 14px 36px;
+    text-decoration: none;
+    color: #4C4C4D;
+    background-color: #FFFFFF;
+}
+
+li:nth-of-type(1) {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Biryani', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #4C4C4D;
+}
+
+/* Change the link color to ocean blue on hover */
+li a:hover {
+    color: #7bd2f2;
+}
+
+/* Horizontal arrangement of labels and values */
+.container {
+    display: flex;
+    width: 100%;
+    padding-top: 225px;
+    min-height: calc(100vh - 398px)
+}
+
+.column {
+    text-align: center;
+    flex-grow: 1;
+}
+
+/* Label styling */
+.text {
+    font-family: 'Biryani', sans-serif;
+    font-size: 14px;
+    font-weight: lighter;
+    text-align: center;
+    color: #4C4C4D;
+}
+
+/* Tide and wind styling */
+.number {
+    font-family: 'Biryani', sans-serif;
+    font-size: 70px;
+    font-weight: bold;
+    color: #4C4C4D;
+    text-align: center;
+}
+
+/* Wave height values style */
+.wavenumber {
+    font-family: 'Biryani', sans-serif;
+    font-size: 70px;
+    font-weight: bold;
+    color: #7bd2f2;
+    text-align: center;
+}
+
+#footer {
+    position: relative;
+    bottom: 0px;
+    height: 30px;
+    left: 0px;
+    right: 0px;
+}

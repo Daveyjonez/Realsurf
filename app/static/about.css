@@ -1,0 +1,86 @@
+body, html{
+    padding:0;
+    margin:0;
+}
+
+h1{
+    font-family: 'Biryani', sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: #4C4C4D;
+}
+
+h2{
+    font-family: 'Biryani', sans-serif;
+    font-size: 14px;
+    font-weight: lighter;
+    text-align: center;
+    color: #c6c6c6;
+}
+
+p{
+    font-family: 'Biryani', sans-serif;
+    font-size: 14px;
+    font-weight: lighter;
+    text-align: justify;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top:225px;
+    color: #4C4C4D;
+    min-height: calc(100vh - 400px);
+}
+
+/* Style entire list */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Biryani', sans-serif;
+    font-size: 20px;
+    font-weight: lighter;
+    color: #4C4C4D;
+    width: 100%;
+    border-bottom: 1px solid #4C4C4D;
+}
+
+/* Lock REALSURF to far left */
+li {
+    float: left;
+}
+
+/* Individual attributes for each list element */
+li a {
+    display: block;
+    color: white;
+    padding: 14px 36px;
+    text-decoration: none;
+    color: #4C4C4D;
+    background-color: #FFFFFF;
+}
+
+/* Make REALSURF bold and other stuff */
+li:nth-of-type(1) {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Biryani', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #4C4C4D;
+}
+
+/* Change the link color to ocean blue on hover */
+li a:hover {
+    color: #7bd2f2;
+}
+
+#footer {
+    position: relative;
+    bottom: 0px;
+    height: 30px;
+    left: 0px;
+    right: 0px;
+}
