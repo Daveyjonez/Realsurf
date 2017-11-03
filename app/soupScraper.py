@@ -4,6 +4,7 @@
 #			  data includes wave height, tide, and wind.
 
 import csv
+import re
 import requests
 from bs4 import BeautifulSoup
 
@@ -34,6 +35,7 @@ msScrippsUrl = 'Scripps-Pier-La-Jolla-Surf-Report/296/'
 msBlacksUrl = 'Torrey-Pines-Blacks-Beach-Surf-Report/295/'
 
 msTagText = 'rating-text'
+msWindClass = 'h5 nomargin-top'
 msTag = 'li'
 
 #list of magicseaweed URL endings
@@ -68,25 +70,6 @@ def waveTagFilter(tag):
 #END METHOD
 
 '''
-This returns the proper attribute for wind from the surf report sites
-'''
-def windTagFilter(tag):
-    return (tag.has_attr('id') and tag['id'] == 'curr-wind-div')
-#END METHOD
-
-'''
-This method checks if the parameter is of type int
-'''
-def representsInt(s):
-    try:
-        int(s)
-        return True
-
-    except ValueError:
-        return False
-#END METHOD
-
-'''
 This method extracts all ints from a list of reports
 
 reports: The list of surf reports from a single website
@@ -95,15 +78,15 @@ returns: reportNums - A list of ints of the wave heights
 '''
 def extractInts(reports):
 	reportNums = []
-	num = 0
 
 	#extract all ints from the reports and ditch the rest
 	for report in reports:
 		for char in report:
-			if representsInt(char) == True:
-
+			try :
 				num = int(char)
 				reportNums.append(num)
+			except:
+				pass
 
 	return reportNums
 #END METHOD
@@ -139,7 +122,7 @@ def extractReports(rootUrl, urlList, tag, tagText):
 			reports.append(reportTag.text.strip())
 		#notify if fail
 		except:
-			print ('wave failure at URL: {}'.format(url))
+			print ('failure at URL: {}'.format(url))
 			pass
 
 	reportNums = extractInts(reports)
@@ -149,7 +132,7 @@ def extractReports(rootUrl, urlList, tag, tagText):
 
 '''
 This method iterates through a list of urls and extracts the wind from
-the webpage dependent upon its tag location
+the webpage dependent upon its tag location. Only uses Magiseaweed values
 
 rootUrl: The root url of each surf website
 urlList: A list of specific urls to be appended to the root url for each
@@ -159,62 +142,68 @@ tag:	 the html tag where the actual report lives on the page
 
 returns: a list of strings of each breaks measured wind
 '''
-def extractWind(rootUrl, urlList, tag, tagText):
-	#empty list to hold reports
-	winds = []
-	windNums = []
-	index = 0
-
-	#loop thru URLs
+def extractWind(rootUrl, urlList):
+	allWinds = []
+	#Loop thru each surf break and collect the current wind reading
 	for url in urlList:
 		try:
-			index += 1
 			#request page
 			request = requests.get(rootUrl + url)
-			print (request)
 			#turn into soup
 			soup = BeautifulSoup(request.content, 'lxml')
-			#get the tag where wind value lives
-			windTag = soup.findAll(windTagFilter)[0]
-			#Add string values to
-			winds.append(windTag.text.strip())
+			#get the tag/class where wind value lives
+			windClass = soup.find_all('p', {'class':msWindClass})
+			#extract the data and cast to int
+			for element in windClass:
+					data = element.getText()
+					wind = int(re.findall('\d+', data)[0])
+					allWinds.append(wind)
+
 		#notify if fail
-		except:
-			print ('wind failure at URL: {}'.format(url))
+		except Exception as e:
+			print('Wind scrape failure @ URL: {}'.format(url))
+			print('ERROR:\n{}'.format(e))
 			pass
 
-	windNums = extractInts(winds)
+	return allWinds
 
-	return windNums
-#END METHOD
+'''
+This method iterates through a list of urls and extracts the tide from
+the webpage dependent upon its tag location. Only uses surfline values
+
+rootUrl: The root url of each surf website
+urlList: A list of specific urls to be appended to the root url for each
+		 break
+
+returns: a list of strings of each breaks current tide
+'''
+def extractTide(url):
+	allTides = []
+	#Loop thru each surf break and collect the current wind reading
+	try:
+		#request page
+		request = requests.get(url)
+		#turn into soup
+		soup = BeautifulSoup(request.content, 'lxml')
+		#get the tag/class where tide value lives
+		tideContent = soup.find('pre', attrs={'class':'predictions-table'}).text
+		tideData = tideContent.strip().splitlines()
+		print(tideData)
+
+
+	#notify if fail
+	except Exception as e:
+		print('Tide scrape failure @ URL: {}'.format(url))
+		print('ERROR:\n{}'.format(e))
+		pass
+	return allTides
 
 '''
 This method calculates the average of the wave heights
 '''
-def calcAverages(reportList):
-	#empty list to hold averages
-	finalAverages = []
-	listIndex = 0
-	waveIndex = 0
-
-	#loop thru list of reports to calc each breaks ave low and high
-	for x in range(0, 6):
-			#get low ave
-			average = (reportList[listIndex][waveIndex]
-				+ reportList[listIndex+1][waveIndex]) / NUM_SITES
-
-			finalAverages.append(average)
-
-			waveIndex += 1
-
-	return finalAverages
+#TODO
+def calcAverages(surfBreaks):
+	return
 #END METHOD
 
-
-slReports = extractReports(slRootUrl, slUrls, slTag, slTagText)
-msReports = extractReports(msRootUrl, msUrls, msTag, msTagText)
-slWinds = extractWind(slRootUrl, slUrls, slTag, 'curr-wind-div')
-
-print (slWinds)
-print ('Surfline:     {}'.format(slReports))
-print ('Magicseaweed: {}'.format(msReports))
+extractTide('http://tides.mobilegeographics.com/locations/5538.html')
