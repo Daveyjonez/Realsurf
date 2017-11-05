@@ -1,4 +1,5 @@
 #Author: David Owens
+ 
 #File name: soupScraper.py
 #Description: html scraper that takes surf reports from various websites. 
 #             This data includes wave height, tide, and wind.
