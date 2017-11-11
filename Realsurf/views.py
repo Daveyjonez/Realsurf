@@ -1,7 +1,8 @@
 #Import flask for framework
+from flask import render_template
 from Realsurf import app
 #Import scraping functions for wave height functions
-from soupScraper import *
+from Realsurf.soupScraper import *
 
 #Lists to hold break data
 slFinal = []
